@@ -10,11 +10,9 @@ defineProps<{
 <template>
     <div
         class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col h-full">
-        <!-- Image -->
         <div class="h-48 overflow-hidden relative">
             <img :src="course.thumbnail" :alt="course.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            <!-- Overlay Gradient -->
             <div
                 class="absolute inset-0 bg-linear-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
             </div>

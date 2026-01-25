@@ -2,11 +2,8 @@
 import { GraduationCap } from 'lucide-vue-next';
 import { RouterLink, useRoute } from 'vue-router';
 
-// useRoute is available if we need to check active route explicitly to style
 const route = useRoute();
 
-// Simple helper to check if link is active, though router-link-active class exists, 
-// the user had a specific design for active state (border-b-2)
 const isActive = (path: string) => route.path === path;
 </script>
 
@@ -30,8 +27,8 @@ const isActive = (path: string) => route.path === path;
         :class="isActive('/') ? 'text-[#30364F] font-bold border-b-2 border-[#30364F] pb-1' : 'text-gray-500 hover:text-gray-900 font-medium'">
         Beranda
       </RouterLink>
-      <RouterLink to="/kursus" class="text-sm transition-colors"
-        :class="isActive('/kursus') ? 'text-[#30364F] font-bold border-b-2 border-[#30364F] pb-1' : 'text-gray-500 hover:text-gray-900 font-medium'">
+      <RouterLink to="/course" class="text-sm transition-colors"
+        :class="isActive('/course') ? 'text-[#30364F] font-bold border-b-2 border-[#30364F] pb-1' : 'text-gray-500 hover:text-gray-900 font-medium'">
         Kursus
       </RouterLink>
     </div>

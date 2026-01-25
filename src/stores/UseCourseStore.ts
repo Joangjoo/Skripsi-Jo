@@ -2,8 +2,14 @@ import { defineStore } from 'pinia'
 import { getCourses } from '../api/CourseService'
 import type { Course } from '../types'
 
+interface CourseState {
+    ListCourses: Course[];
+    isLoading: boolean;
+    error: string | null;
+}
+
 export const useCourseStore = defineStore('course', {
-    state: () => ({
+    state: (): CourseState => ({
         ListCourses: [] as Course[],
         isLoading: false,
         error: null as string | null
