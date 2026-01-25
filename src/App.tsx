@@ -1,24 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
 import Courses from "./pages/Courses/Courses";
+import CourseDetail from "./pages/Courses/components/CourseDetail";
 import "./App.css";
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-        <Navbar />
-        <div className="grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/courses" element={<Courses />} />
-          </Routes>
-        </div>
-        <Footer />
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <Navbar />
+      <div className="grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/:id" element={<CourseDetail />} />
+        </Routes>
       </div>
-    </Router>
+      <Footer />
+    </div>
   );
 }
 
