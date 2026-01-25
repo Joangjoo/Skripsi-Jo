@@ -1,5 +1,5 @@
 import { ArrowRight, Clock } from "lucide-react";
-import type { Course } from "../../../data/courses";
+import type { Course } from "../../../types";
 
 interface CourseCardProps {
     course: Course;
@@ -10,13 +10,8 @@ const CourseCard = ({ course }: CourseCardProps) => {
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col h-full">
             {/* Image */}
             <div className="h-48 overflow-hidden relative">
-                <span
-                    className={`${course.categoryColor} absolute top-4 left-4 text-white text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider z-10`}
-                >
-                    {course.category}
-                </span>
                 <img
-                    src={course.image}
+                    src={course.thumbnail}
                     alt={course.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -37,7 +32,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-50 mt-auto">
                     <div className="flex items-center gap-2 text-gray-400 text-xs font-medium">
                         <Clock size={14} />
-                        <span>{course.duration}</span>
+                        <span>{course.level}</span>
                     </div>
                     <button className="flex items-center gap-1 text-[#30364F] text-sm font-bold group-hover:gap-2 transition-all cursor-pointer">
                         Detail

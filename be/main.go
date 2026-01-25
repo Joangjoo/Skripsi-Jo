@@ -2,22 +2,26 @@ package main
 
 import (
 	"log"
-	"net/http"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env")
-	}
+        log.Println("Warning: .env file not found")
+    }
 
-	if err := ConnectDB(); err != nil {
-		log.Fatal(err)
-	}
+    if err := ConnectDB(); err != nil {
+        log.Fatal(err)
+    }
 
-	http.HandleFunc("/api/courses", GetCourses)
+    r := gin.Default()
+    r.Use(cors.Default())
 
-	log.Println("🚀 Server running on :8080")
-	http.ListenAndServe(":8080", nil)
+    r.GET("/api/courses", GetCourses)
+
+    log.Println("🚀 Server running on :8080")
+    r.Run(":8080") 
 }

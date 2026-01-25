@@ -1,41 +1,40 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-func GetCourses(w http.ResponseWriter, r *http.Request) {
-	rows, err := DB.Query(`
-		SELECT id, title, description, category_id, level, rating, thumbnail
-		FROM courses
-	`)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	defer rows.Close()
+func GetCourses(c *gin.Context) {
+    rows, err := DB.Query(`
+        SELECT id, title, description, category_id, level, rating, thumbnail
+        FROM courses
+    `)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+    defer rows.Close()
 
-	var courses []Course
+    var courses []Course = []Course{} 
 
-	for rows.Next() {
-		var c Course
-		err := rows.Scan(
-			&c.ID,
-			&c.Title,
-			&c.Description,
-			&c.CategoryID,
-			&c.Level,
-			&c.Rating,
-			&c.Thumbnail,
-		)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		courses = append(courses, c)
-	}
+    for rows.Next() {
+        var c_row Course
+        err := rows.Scan(
+            &c_row.ID,
+            &c_row.Title,
+            &c_row.Description,
+            &c_row.CategoryID,
+            &c_row.Level,
+            &c_row.Rating,
+            &c_row.Thumbnail,
+        )
+        if err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
+        courses = append(courses, c_row)
+    }
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(courses)
+    c.JSON(http.StatusOK, courses)
 }
