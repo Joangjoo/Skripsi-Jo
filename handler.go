@@ -8,9 +8,11 @@ import (
 
 func GetCourses(c *gin.Context) {
     rows, err := DB.Query(`
-        SELECT c.id, c.title, c.description, c.category_id, c.level_id, l.name AS level_name, c.rating, c.thumbnail
+        SELECT c.id, c.title, c.description, c.category_id, c.level_id, l.name AS level_name, c.rating, c.thumbnail, cat.name AS category_name
         FROM courses c
         JOIN Levels l ON c.level_id = l.id
+        JOIN categories cat ON c.category_id = cat.id
+        ORDER BY c.id ASC
     `)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -31,6 +33,7 @@ func GetCourses(c *gin.Context) {
             &c_row.LevelName,
             &c_row.Rating,
             &c_row.Thumbnail,
+            &c_row.CategoryName,
         )
         if err != nil {
             c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
