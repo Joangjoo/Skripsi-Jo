@@ -9,9 +9,24 @@ const LIMIT = 8
 const STEP = 4
 const visibleCount = ref(LIMIT);
 
+
+const filteredCourses = computed(() => {
+    return courseStore.ListCourses.filter((course) => {
+        return course.title.toLowerCase().includes(courseStore.searchQuery.toLowerCase())
+    })
+})
+
+const filteredByCategory = computed(() => {
+    return filteredCourses.value.filter((course) => {
+        return course.category_name.toLowerCase().includes(courseStore.filterCategoryQuery.toLowerCase())
+    })
+})
+
 const visibleCourses = computed(() => {
-    return courseStore.ListCourses.slice(0, visibleCount.value)
+    return filteredByCategory.value.slice(0, visibleCount.value)
 });
+
+
 
 const isCollapsing = ref(false);
 
@@ -22,8 +37,8 @@ const toogleCourses = () => {
             isCollapsing.value = false;
         }
     } else {
-        visibleCount.value = Math.min(courseStore.ListCourses.length, visibleCount.value + STEP);
-        if (visibleCount.value >= courseStore.ListCourses.length) {
+        visibleCount.value = Math.min(filteredByCategory.value.length, visibleCount.value + STEP);
+        if (visibleCount.value >= filteredByCategory.value.length) {
             isCollapsing.value = true;
         }
     }
@@ -41,7 +56,7 @@ onMounted(async () => {
         <!-- Results Count & Mode Badge -->
         <div class="flex justify-between items-center mb-8">
             <div class="text-gray-500">
-                Ditemukan <span class="font-bold text-[#30364F]">{{ courseStore.ListCourses.length }}</span> Hasil
+                Ditemukan <span class="font-bold text-[#30364F]">{{ filteredByCategory.length }}</span> Hasil
             </div>
         </div>
 
@@ -66,7 +81,7 @@ onMounted(async () => {
             <CourseCard v-for="course in visibleCourses" :key="course.id" :course="course" />
         </div>
 
-        <div v-if="courseStore.ListCourses.length > LIMIT" class="flex justify-center mt-10">
+        <div v-if="filteredByCategory.length > LIMIT" class="flex justify-center mt-10">
             <button @click="toogleCourses" class="flex items-center gap-2 px-6 py-3 rounded-full
            bg-[#30364F] text-white font-semibold
            transition-all hover:gap-3">

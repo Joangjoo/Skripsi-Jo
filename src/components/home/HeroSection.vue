@@ -3,11 +3,11 @@ import { ArrowRight, Star, Bookmark } from 'lucide-vue-next';
 </script>
 
 <template>
-    <section class="max-w-[1280px] mx-auto px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section class="max-w-[1280px] mx-auto px-8 py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <!-- Left Content -->
         <div class="space-y-8">
             <!-- Badge -->
-            <div class="inline-flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full">
+            <div class="inline-flex items-center bg-gray-100 gap-2 px-4 py-2 rounded-full">
                 <span class="w-2 h-2 rounded-full bg-[#30364F]"></span>
                 <span class="text-xs font-bold tracking-widest text-[#30364F] uppercase">Pendaftaran Dibuka: Musim Panas
                     2024</span>

@@ -5,7 +5,7 @@ import CourseGrid from '../components/kursus/CourseGrid.vue';
 </script>
 
 <template>
-    <div class="max-w-[1280px] mx-auto px-8 py-12">
+    <div class="max-w-[1280px] mx-auto px-8 py-3">
         <CourseHeader />
         <FilterBar />
         <CourseGrid />
