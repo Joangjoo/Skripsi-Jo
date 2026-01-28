@@ -34,7 +34,7 @@ const CourseDetail = () => {
   const moduleItems = Array.isArray(CourseDetail?.module) ? CourseDetail?.module : [];
 
   const getRandomHours = () => {
-    const hours = Math.floor(Math.random() * 10) + 1;
+    const hours = Math.floor(Math.random() * 3) + 1;
     return `${hours} hours`;
   };
 

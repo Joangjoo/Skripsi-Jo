@@ -8,28 +8,40 @@ const STEP = 4;
 
 
 const CourseGrid = () => {
-    const { ListCourses, isLoading, error, fetchAllCourses } = useCourseStore();
+    const { ListCourses, isLoading, error, fetchAllCourses, searchQuery, filterCategoryQuery } = useCourseStore();
     const [visibleCount, setVisibleCount] = useState<number>(LIMIT);
 
     useEffect(() => {
         fetchAllCourses();
     }, [fetchAllCourses]);
 
+    const filteredCourses = useMemo(() => {
+        return ListCourses.filter(course => {
+            const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesCategory = filterCategoryQuery === "Semua Kategori" || course.category_name === filterCategoryQuery;
+            return matchesSearch && matchesCategory;
+        });
+    }, [ListCourses, searchQuery, filterCategoryQuery]);
+
     const visibleCourses = useMemo(() => {
-        return ListCourses.slice(0, visibleCount);
-    }, [ListCourses, visibleCount]);
+        return filteredCourses.slice(0, visibleCount);
+    }, [filteredCourses, visibleCount]);
 
     const [isCollapsing, setIsCollapsing] = useState(false);
     useEffect(() => {
+        setVisibleCount(LIMIT);
+    }, [searchQuery, filterCategoryQuery]);
+
+    useEffect(() => {
         if (visibleCount <= LIMIT) setIsCollapsing(false);
-        if (visibleCount >= ListCourses.length && ListCourses.length > LIMIT) setIsCollapsing(true);
-    }, [visibleCount, ListCourses.length]);
+        if (visibleCount >= filteredCourses.length && filteredCourses.length > LIMIT) setIsCollapsing(true);
+    }, [visibleCount, filteredCourses.length]);
 
     const toggleCourses = () => {
         if (!isCollapsing) {
             const nextCount = visibleCount + STEP;
-            if (nextCount >= ListCourses.length) {
-                setVisibleCount(ListCourses.length);
+            if (nextCount >= filteredCourses.length) {
+                setVisibleCount(filteredCourses.length);
                 setIsCollapsing(true);
             } else {
                 setVisibleCount(nextCount);
@@ -76,12 +88,13 @@ const CourseGrid = () => {
             </div>
         );
     }
+
     return (
         <div>
             {/* Results Count & Mode Badge */}
             <div className="flex justify-between items-center mb-8">
                 <div className="text-gray-500">
-                    Ditemukan <span className="font-bold text-[#30364F]">{ListCourses.length}</span> Hasil
+                    Ditemukan <span className="font-bold text-[#30364F]">{filteredCourses.length}</span> Hasil
                 </div>
             </div>
 
@@ -92,7 +105,7 @@ const CourseGrid = () => {
                 ))}
             </div>
 
-            {ListCourses.length > LIMIT && (
+            {filteredCourses.length > LIMIT && (
                 <div className="flex justify-center mt-10">
                     <button
                         onClick={toggleCourses}

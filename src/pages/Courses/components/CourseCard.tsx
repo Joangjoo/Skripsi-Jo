@@ -12,11 +12,15 @@ const CourseCard = ({ course }: CourseCardProps) => {
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col h-full">
                 {/* Image */}
                 <div className="h-48 overflow-hidden relative">
+                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-[#30364F] z-10 shadow-sm">
+                        {course.category_name}
+                    </div>
                     <img
                         src={course.thumbnail}
                         alt={course.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
+
                     {/* Overlay Gradient */}
                     <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </div>

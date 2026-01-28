@@ -6,15 +6,16 @@ import Courses from "./pages/Courses/Courses";
 import CourseDetail from "./pages/Courses/components/CourseDetail";
 import "./App.css";
 
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-white flex flex-col font-sans">
       <Navbar />
-      <div className="grow">
+      <div className="pt-[80px] grow">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/courses/:id" element={<CourseDetail />} />
+          <Route path="/course" element={<Courses />} />
+          <Route path="/course/:id" element={<CourseDetail />} />
         </Routes>
       </div>
       <Footer />

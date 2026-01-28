@@ -2,7 +2,7 @@ import { ArrowRight, Star, Bookmark } from "lucide-react";
 
 const HeroSection = () => {
     return (
-        <section className="pt-32 pb-16 max-w-[1280px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+        <section className="max-w-[1280px] mx-auto px-8 py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div className="space-y-8">
                 {/* Badge */}

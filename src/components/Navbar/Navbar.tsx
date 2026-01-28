@@ -34,9 +34,9 @@ const Navbar = () => {
                     Beranda
                 </Link>
                 <Link
-                    to="/courses"
+                    to="/course"
                     className={
-                        isActive("/courses")
+                        isActive("/course")
                             ? "text-[#30364F] font-bold text-sm border-b-2 border-[#30364F] pb-1"
                             : "text-gray-500 hover:text-gray-900 font-medium text-sm transition-colors"
                     }

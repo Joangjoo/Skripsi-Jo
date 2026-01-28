@@ -9,6 +9,10 @@ interface CourseState {
   moduleItems: string[];
   isLoading: boolean;
   error: string | null;
+  searchQuery: string;
+  filterCategoryQuery : string;
+  setSearchQuery: (query: string) => void;
+  setFilterCategoryQuery : (query: string) => void;
   fetchAllCourses: () => Promise<void>;
   fetchCourseDetail: (id: number) => Promise<void>;
 }
@@ -20,6 +24,10 @@ export const useCourseStore = create<CourseState>((set) => ({
   moduleItems: [],
   isLoading: false,
   error: null,
+  searchQuery: "",
+  filterCategoryQuery : "Semua Kategori",
+  setSearchQuery: (query) => set({ searchQuery: query }),
+  setFilterCategoryQuery : (query) => set({filterCategoryQuery : query}),
 
   fetchAllCourses: async () => {
     set({ isLoading: true, error: null });
@@ -43,16 +51,16 @@ export const useCourseStore = create<CourseState>((set) => ({
       const parsedLearn =
         typeof data.learn === "string"
           ? data.learn
-              .replace(/[{}]/g, "") 
-              .split(",") 
+              .replace(/[{}]/g, "")
+              .split(",")
               .map((item: string) => item.trim())
           : [];
 
       const parsedModule =
         typeof data.module === "string"
           ? data.module
-              .replace(/[{}]/g, "") 
-              .split(",") 
+              .replace(/[{}]/g, "")
+              .split(",")
               .map((item: string) => item.trim())
           : [];
 
