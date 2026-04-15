@@ -1,7 +1,38 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import KursusView from "../views/CourseView.vue";
-import CourseDetailView from "../components/kursus/CourseDetail.vue";
+import { defineAsyncComponent, h } from "vue";
+
+// Lazy Loading Routes - Matches React implementation
+// Loading fallback component
+const LoadingComponent = {
+  render() {
+    return h('div', { 
+      class: 'flex h-[50vh] items-center justify-center' 
+    }, [
+      h('p', { class: 'text-gray-500 text-lg' }, 'Loading...')
+    ]);
+  }
+};
+
+const HomeView = defineAsyncComponent({
+  loader: () => import("../views/HomeView.vue"),
+  loadingComponent: LoadingComponent,
+  delay: 200,
+  timeout: 10000,
+});
+
+const KursusView = defineAsyncComponent({
+  loader: () => import("../views/CourseView.vue"),
+  loadingComponent: LoadingComponent,
+  delay: 200,
+  timeout: 10000,
+});
+
+const CourseDetailView = defineAsyncComponent({
+  loader: () => import("../components/kursus/CourseDetail.vue"),
+  loadingComponent: LoadingComponent,
+  delay: 200,
+  timeout: 10000,
+});
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,17 +43,17 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/course",
+      path: "/courses",
       name: "course",
       component: KursusView,
     },
     {
-      path: "/course/:id",
+      path: "/courses/:id",
       name: "courseDetail",
       component: CourseDetailView,
     },
   ],
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
     } else {

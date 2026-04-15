@@ -1,54 +1,89 @@
 <script setup lang="ts">
 import CourseCard from './CourseCard.vue';
 import { useCourseStore } from '../../stores/UseCourseStore';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import { ArrowRight, ArrowLeft } from 'lucide-vue-next';
 
 const courseStore = useCourseStore();
-const LIMIT = 8
-const STEP = 4
+const LIMIT = 8;
+const STEP = 4;
 const visibleCount = ref(LIMIT);
-
-
-const filteredCourses = computed(() => {
-    return courseStore.ListCourses.filter((course) => {
-        return course.title.toLowerCase().includes(courseStore.searchQuery.toLowerCase())
-    })
-})
-
-const filteredByCategory = computed(() => {
-    return filteredCourses.value.filter((course) => {
-        return course.category_name.toLowerCase().includes(courseStore.filterCategoryQuery.toLowerCase())
-    })
-})
-
-const visibleCourses = computed(() => {
-    return filteredByCategory.value.slice(0, visibleCount.value)
-});
-
-
-
 const isCollapsing = ref(false);
 
+// Single computed filter - matches React implementation
+const filteredCourses = computed(() => {
+    let result = courseStore.ListCourses.filter((course) => {
+        const matchesSearch = course.title.toLowerCase().includes(courseStore.searchQuery.toLowerCase());
+        const matchesCategory = courseStore.filterCategoryQuery === "Semua Kategori" || course.category_name === courseStore.filterCategoryQuery;
+        return matchesSearch && matchesCategory;
+    });
+
+    // Sorting Logic - Matches React implementation
+    result = [...result].sort((a, b) => {
+        switch (courseStore.sortQuery) {
+            case "rating-desc":
+                return b.rating - a.rating;
+            case "rating-asc":
+                return a.rating - b.rating;
+            case "price-asc":
+                return a.price - b.price;
+            case "price-desc":
+                return b.price - a.price;
+            case "title-asc":
+                return a.title.localeCompare(b.title);
+            case "title-desc":
+                return b.title.localeCompare(a.title);
+            default:
+                return 0;
+        }
+    });
+
+    return result;
+});
+
+const visibleCourses = computed(() => {
+    return filteredCourses.value.slice(0, visibleCount.value);
+});
+
+// Watch for filter/sort changes to reset visible count and update collapse state
+watch([() => courseStore.searchQuery, () => courseStore.filterCategoryQuery, () => courseStore.sortQuery], () => {
+    visibleCount.value = LIMIT;
+    isCollapsing.value = false;
+});
+
+// Update collapse state based on visible count
+watch([visibleCount, filteredCourses], () => {
+    if (visibleCount.value <= LIMIT) {
+        isCollapsing.value = false;
+    }
+    if (visibleCount.value >= filteredCourses.value.length && filteredCourses.value.length > LIMIT) {
+        isCollapsing.value = true;
+    }
+});
+
 const toogleCourses = () => {
-    if (isCollapsing.value) {
-        visibleCount.value = Math.max(LIMIT, visibleCount.value - STEP);
-        if (visibleCount.value <= LIMIT) {
-            isCollapsing.value = false;
+    if (!isCollapsing.value) {
+        const nextCount = visibleCount.value + STEP;
+        if (nextCount >= filteredCourses.value.length) {
+            visibleCount.value = filteredCourses.value.length;
+            isCollapsing.value = true;
+        } else {
+            visibleCount.value = nextCount;
         }
     } else {
-        visibleCount.value = Math.min(filteredByCategory.value.length, visibleCount.value + STEP);
-        if (visibleCount.value >= filteredByCategory.value.length) {
-            isCollapsing.value = true;
+        const nextCount = visibleCount.value - STEP;
+        if (nextCount <= LIMIT) {
+            visibleCount.value = LIMIT;
+            isCollapsing.value = false;
+        } else {
+            visibleCount.value = nextCount;
         }
     }
-}
+};
 
 onMounted(async () => {
-    if (!courseStore.ListCourses.length) {
-        await courseStore.fetchAllCourses()
-    }
-})
+    await courseStore.fetchAllCourses();
+});
 </script>
 
 <template>
@@ -56,7 +91,7 @@ onMounted(async () => {
         <!-- Results Count & Mode Badge -->
         <div class="flex justify-between items-center mb-8">
             <div class="text-gray-500">
-                Ditemukan <span class="font-bold text-[#30364F]">{{ filteredByCategory.length }}</span> Hasil
+                Ditemukan <span class="font-bold text-[#30364F]">{{ filteredCourses.length }}</span> Hasil
             </div>
         </div>
 
@@ -81,7 +116,7 @@ onMounted(async () => {
             <CourseCard v-for="course in visibleCourses" :key="course.id" :course="course" />
         </div>
 
-        <div v-if="filteredByCategory.length > LIMIT" class="flex justify-center mt-10">
+        <div v-if="filteredCourses.length > LIMIT" class="flex justify-center mt-10">
             <button @click="toogleCourses" class="flex items-center gap-2 px-6 py-3 rounded-full
            bg-[#30364F] text-white font-semibold
            transition-all hover:gap-3">

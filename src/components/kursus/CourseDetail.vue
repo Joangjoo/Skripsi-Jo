@@ -17,15 +17,10 @@ import {
     ArrowLeft,
     ChevronRight,
 } from "lucide-vue-next";
+import CourseReviews from "./CourseReviews.vue";
 
 const courseStore = useCourseStore()
 const { CourseDetail, learnItems, moduleItems } = storeToRefs(courseStore)
-
-
-const getRandomHours = () => {
-    const hours = Math.floor(Math.random() * 10) + 1
-    return `${hours} jam`
-}
 
 const route = useRoute()
 const id = route.params.id
@@ -54,7 +49,7 @@ onMounted(() => {
           <!-- Back Navigation -->
           <div class="flex items-center gap-4 text-sm mb-8 font-sans">
             <RouterLink
-              to="/course"
+              to="/courses"
               class="flex items-center gap-2 text-[#30364F] font-bold hover:underline"
             >
               <ArrowLeft :size="16" />
@@ -157,12 +152,11 @@ onMounted(() => {
                       {{ module }}
                     </h3>
                   </div>
-                  <span class="text-xs font-medium text-gray-400">
-                    {{ getRandomHours() }}
-                  </span>
                 </li>
             </ul>
           </div>
+
+          <CourseReviews :courseId="Number(id)" />
         </div>
 
         <!-- RIGHT COLUMN - SIDEBAR -->
@@ -182,10 +176,10 @@ onMounted(() => {
                 Includes
               </h4>
               <ul class="space-y-4">
-                  <li v-for="(Feature, idx) in MOCK_DATA.features" :key="idx" class="flex items-center gap-3">
-                    <Feature.icon :size="18" class="text-[#00BFA5]" />
+                  <li v-for="(feature, idx) in MOCK_DATA.features" :key="idx" class="flex items-center gap-3">
+                    <component :is="feature.icon" :size="18" class="text-[#00BFA5]" />
                     <span class="text-sm text-gray-600 font-medium">
-                      {{ Feature.label }}
+                      {{ feature.label }}
                     </span>
                   </li>
               </ul>

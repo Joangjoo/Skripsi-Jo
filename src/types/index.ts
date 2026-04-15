@@ -18,3 +18,9 @@ export interface Course {
     subtitle : string;
     overview : string;
 }
+
+export interface Curriculum {
+    id: number;
+    title: string;
+    description: string;
+}

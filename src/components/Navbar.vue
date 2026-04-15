@@ -27,8 +27,8 @@ const isActive = (path: string) => route.path === path;
         :class="isActive('/') ? 'text-[#30364F] font-bold border-b-2 border-[#30364F] pb-1' : 'text-gray-500 hover:text-gray-900 font-medium'">
         Beranda
       </RouterLink>
-      <RouterLink to="/course" class="text-sm transition-colors"
-        :class="isActive('/course') ? 'text-[#30364F] font-bold border-b-2 border-[#30364F] pb-1' : 'text-gray-500 hover:text-gray-900 font-medium'">
+      <RouterLink to="/courses" class="text-sm transition-colors"
+        :class="isActive('/courses') ? 'text-[#30364F] font-bold border-b-2 border-[#30364F] pb-1' : 'text-gray-500 hover:text-gray-900 font-medium'">
         Kursus
       </RouterLink>
     </div>

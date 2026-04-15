@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import { ArrowRight, Star, Bookmark } from 'lucide-vue-next';
+import { useCourseStore } from '../../stores/UseCourseStore';
+import { onMounted } from 'vue';
+
+const course = useCourseStore()
+
+onMounted(async () => {
+    if (!course.ListCourses.length) {
+        await course.fetchAllCourses()
+    }
+})
 </script>
 
 <template>
@@ -33,12 +43,10 @@ import { ArrowRight, Star, Bookmark } from 'lucide-vue-next';
             </button>
         </div>
 
-        <!-- Right Content (Visuals) -->
         <div class="relative">
             <!-- Background Card -->
             <div
                 class="bg-gray-100 rounded-3xl p-8 pb-32 relative overflow-hidden min-h-[500px] flex flex-col items-center justify-center">
-                <!-- Decorative gradient or shape if needed, plain for now as per image look -->
 
                 <!-- Cards Container - Absolute or Grid within -->
                 <div class="flex flex-col gap-6 w-full max-w-md relative z-10">
@@ -47,10 +55,10 @@ import { ArrowRight, Star, Bookmark } from 'lucide-vue-next';
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
                         <div class="flex justify-between items-start mb-4">
                             <span
-                                class="bg-[#E0F2F1] text-[#00BFA5] text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">Lanjutan</span>
+                                class="bg-[#E0F2F1] text-[#00BFA5] text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">{{ course.ListCourses[0]?.level_name }}</span>
                             <Bookmark :size="20" class="text-gray-300 fill-gray-300" />
                         </div>
-                        <h3 class="text-xl font-bold text-[#30364F] mb-4">Pendalaman Performa React</h3>
+                        <h3 class="text-xl font-bold text-[#30364F] mb-4">{{ course.ListCourses[0]?.title }}</h3>
                         <div class="flex items-center gap-2 text-sm text-gray-500">
                             <Star :size="16" class="text-yellow-400 fill-yellow-400" />
                             <span class="font-bold text-[#30364F]">4.9</span>
@@ -62,11 +70,10 @@ import { ArrowRight, Star, Bookmark } from 'lucide-vue-next';
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 translate-x-8 opacity-90">
                         <div class="flex justify-between items-start mb-4">
                             <span
-                                class="bg-gray-200 text-[#30364F] text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">Menengah</span>
+                                class="bg-gray-200 text-[#30364F] text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">{{ course.ListCourses[1]?.level_name }}</span>
                             <Bookmark :size="20" class="text-gray-300 fill-gray-300" />
                         </div>
-                        <h3 class="text-xl font-bold text-[#30364F]">Internal Vue 3.4</h3>
-                        <!-- Truncated/Hidden details as per image style overlapping -->
+                        <h3 class="text-xl font-bold text-[#30364F]">{{ course.ListCourses[1]?.title }}</h3>
                     </div>
 
                 </div>

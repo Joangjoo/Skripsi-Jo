@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { getCourses, getCourseById } from "../api/CourseService";
 import type { Course } from "../types";
-import { ref } from "vue";
 
 interface CourseState {
   ListCourses: Course[];
@@ -12,6 +11,7 @@ interface CourseState {
   error: string | null;
   searchQuery: string;
   filterCategoryQuery: string;
+  sortQuery: string;
 }
 
 export const useCourseStore = defineStore("course", {
@@ -23,11 +23,17 @@ export const useCourseStore = defineStore("course", {
     isLoading: false,
     error: null,
     searchQuery: "",
-    filterCategoryQuery: "",
+    filterCategoryQuery: "Semua Kategori",
+    sortQuery: "rating-desc",
   }),
   actions: {
     async fetchAllCourses() {
+      // Caching Strategy: If data exists, don't re-fetch
+      if (this.ListCourses.length > 0) return;
+
       this.isLoading = true;
+      this.error = null;
+
       try {
         this.ListCourses = await getCourses();
       } catch (error) {
@@ -38,28 +44,35 @@ export const useCourseStore = defineStore("course", {
     },
 
     async fetchCourseById(id: number) {
+      // Caching Strategy: If current detail matches requested ID, don't re-fetch
+      if (this.CourseDetail && this.CourseDetail.id === id) return;
+
       this.isLoading = true;
       this.error = null;
 
       try {
         const data = await getCourseById(id);
-        const parsedLearn =
-          typeof data.learn === "string"
-            ? data.learn
-                .replace(/[{}]/g, "")
-                .split(",")
-                .map((item: string) => item.trim())
-            : [];
 
-        const parsedModule =
-          typeof data.module === "string"
-            ? data.module
-                .replace(/[{}]/g, "")
-                .split(",")
-                .map((item: string) => item.trim())
-            : [];
+        // Safe Parsing Logic - Handle both array and string
+        const parseList = (input: string | string[] | undefined): string[] => {
+          if (Array.isArray(input)) return input;
+          if (typeof input === "string") {
+            return input
+              .replace(/[{}]/g, "")
+              .split(",")
+              .map((item: string) => item.trim());
+          }
+          return [];
+        };
 
-        this.CourseDetail = data;
+        const parsedLearn = parseList(data.learn);
+        const parsedModule = parseList(data.module);
+
+        this.CourseDetail = {
+          ...data,
+          learn: parsedLearn,
+          module: parsedModule,
+        };
         this.learnItems = parsedLearn;
         this.moduleItems = parsedModule;
       } catch (error) {
@@ -75,6 +88,10 @@ export const useCourseStore = defineStore("course", {
 
     setFilterCategoryQuery(query: string) {
       this.filterCategoryQuery = query;
+    },
+
+    setSortQuery(query: string) {
+      this.sortQuery = query;
     },
   },
   getters: {

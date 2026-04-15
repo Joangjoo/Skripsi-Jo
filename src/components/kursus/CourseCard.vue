@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-    <RouterLink :to="`/course/${course.id}`">
+    <RouterLink :to="`/courses/${course.id}`">
         <div
             class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col h-full">
             <div class="h-48 overflow-hidden relative">
@@ -37,7 +37,7 @@ defineProps<{
                         <span>{{ course.level_name }}</span>
                     </div>
                     <button
-                        class="flex items-center gap-1 text-[#30364F] text-sm font-bold group-hover:gap-2 transition-all">
+                        class="flex items-center gap-1 text-[#30364F] text-sm font-bold group-hover:gap-2 transition-all cursor-pointer">
                         Detail
                         <ArrowRight :size="16" />
                     </button>
