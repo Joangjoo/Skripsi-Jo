@@ -8,7 +8,7 @@ const STEP = 4;
 
 
 const CourseGrid = () => {
-    const { ListCourses, isLoading, error, fetchAllCourses, searchQuery, filterCategoryQuery } = useCourseStore();
+    const { ListCourses, isLoading, error, fetchAllCourses, searchQuery, filterCategoryQuery, sortQuery } = useCourseStore();
     const [visibleCount, setVisibleCount] = useState<number>(LIMIT);
 
     useEffect(() => {
@@ -16,12 +16,34 @@ const CourseGrid = () => {
     }, [fetchAllCourses]);
 
     const filteredCourses = useMemo(() => {
-        return ListCourses.filter(course => {
+        let result = ListCourses.filter(course => {
             const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesCategory = filterCategoryQuery === "Semua Kategori" || course.category_name === filterCategoryQuery;
             return matchesSearch && matchesCategory;
         });
-    }, [ListCourses, searchQuery, filterCategoryQuery]);
+
+        // Sorting Logic
+        result = [...result].sort((a, b) => {
+            switch (sortQuery) {
+                case "rating-desc":
+                    return b.rating - a.rating;
+                case "rating-asc":
+                    return a.rating - b.rating;
+                case "price-asc":
+                    return a.price - b.price;
+                case "price-desc":
+                    return b.price - a.price;
+                case "title-asc":
+                    return a.title.localeCompare(b.title);
+                case "title-desc":
+                    return b.title.localeCompare(a.title);
+                default:
+                    return 0;
+            }
+        });
+
+        return result;
+    }, [ListCourses, searchQuery, filterCategoryQuery, sortQuery]);
 
     const visibleCourses = useMemo(() => {
         return filteredCourses.slice(0, visibleCount);
@@ -30,7 +52,7 @@ const CourseGrid = () => {
     const [isCollapsing, setIsCollapsing] = useState(false);
     useEffect(() => {
         setVisibleCount(LIMIT);
-    }, [searchQuery, filterCategoryQuery]);
+    }, [searchQuery, filterCategoryQuery, sortQuery]);
 
     useEffect(() => {
         if (visibleCount <= LIMIT) setIsCollapsing(false);

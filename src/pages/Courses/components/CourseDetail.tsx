@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { useCourseStore } from "../../../store/UseCourseStore";
+import CourseReviews from "./CourseReviews";
 
 const MOCK_DATA = {
   term: "Fall 2024",
@@ -33,10 +34,7 @@ const CourseDetail = () => {
   const learnItems = Array.isArray(CourseDetail?.learn) ? CourseDetail?.learn : [];
   const moduleItems = Array.isArray(CourseDetail?.module) ? CourseDetail?.module : [];
 
-  const getRandomHours = () => {
-    const hours = Math.floor(Math.random() * 3) + 1;
-    return `${hours} hours`;
-  };
+
 
   useEffect(() => {
     if (id) {
@@ -185,13 +183,12 @@ const CourseDetail = () => {
                       {module}
                     </h3>
                   </div>
-                  <span className="text-xs font-medium text-gray-400">
-                    {getRandomHours()}
-                  </span>
                 </li>
               ))}
             </ul>
           </div>
+
+          <CourseReviews courseId={Number(id)} />
         </div>
 
         {/* RIGHT COLUMN - SIDEBAR */}

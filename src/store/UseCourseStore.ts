@@ -1,23 +1,8 @@
 import { create } from "zustand";
 import { getCourses, getCourseDetail } from "../api/CourseService";
-import type { Course } from "../types";
+import type { CourseState } from "../types";
 
-interface CourseState {
-  ListCourses: Course[];
-  CourseDetail: Course | null;
-  learnItems: string[];
-  moduleItems: string[];
-  isLoading: boolean;
-  error: string | null;
-  searchQuery: string;
-  filterCategoryQuery : string;
-  setSearchQuery: (query: string) => void;
-  setFilterCategoryQuery : (query: string) => void;
-  fetchAllCourses: () => Promise<void>;
-  fetchCourseDetail: (id: number) => Promise<void>;
-}
-
-export const useCourseStore = create<CourseState>((set) => ({
+export const useCourseStore = create<CourseState>((set, get) => ({
   ListCourses: [],
   CourseDetail: null,
   learnItems: [],
@@ -25,11 +10,16 @@ export const useCourseStore = create<CourseState>((set) => ({
   isLoading: false,
   error: null,
   searchQuery: "",
-  filterCategoryQuery : "Semua Kategori",
+  filterCategoryQuery: "Semua Kategori",
+  sortQuery: "rating-desc",
   setSearchQuery: (query) => set({ searchQuery: query }),
-  setFilterCategoryQuery : (query) => set({filterCategoryQuery : query}),
+  setFilterCategoryQuery: (query) => set({ filterCategoryQuery: query }),
+  setSortQuery: (query) => set({ sortQuery: query }),
 
   fetchAllCourses: async () => {
+    // Caching Strategy: If data exists, don't re-fetch
+    if (get().ListCourses.length > 0) return;
+
     set({ isLoading: true, error: null });
 
     try {
@@ -43,26 +33,29 @@ export const useCourseStore = create<CourseState>((set) => ({
   },
 
   fetchCourseDetail: async (id: number) => {
+    // Caching Strategy: If current detail matches requested ID, don't re-fetch
+    const currentDetail = get().CourseDetail;
+    if (currentDetail && currentDetail.id === id) return;
+
     set({ isLoading: true, error: null });
 
     try {
       const data = await getCourseDetail(id);
 
-      const parsedLearn =
-        typeof data.learn === "string"
-          ? data.learn
-              .replace(/[{}]/g, "")
-              .split(",")
-              .map((item: string) => item.trim())
-          : [];
+      // Safe Parsing Logic
+      const parseList = (input: string | string[]) => {
+        if (Array.isArray(input)) return input;
+        if (typeof input === "string") {
+          return input
+            .replace(/[{}]/g, "")
+            .split(",")
+            .map((item) => item.trim());
+        }
+        return [];
+      };
 
-      const parsedModule =
-        typeof data.module === "string"
-          ? data.module
-              .replace(/[{}]/g, "")
-              .split(",")
-              .map((item: string) => item.trim())
-          : [];
+      const parsedLearn = parseList(data.learn);
+      const parsedModule = parseList(data.module);
 
       set({
         CourseDetail: {

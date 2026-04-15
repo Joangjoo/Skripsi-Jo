@@ -17,3 +17,26 @@ export interface Course {
     subtitle : string;
     overview : string;
 }
+
+export interface CourseState {
+  ListCourses: Course[];
+  CourseDetail: Course | null;
+  learnItems: string[];
+  moduleItems: string[];
+  isLoading: boolean;
+  error: string | null;
+  searchQuery: string;
+  filterCategoryQuery : string;
+  sortQuery: string;
+  setSearchQuery: (query: string) => void;
+  setFilterCategoryQuery : (query: string) => void;
+  setSortQuery: (query: string) => void;
+  fetchAllCourses: () => Promise<void>;
+  fetchCourseDetail: (id: number) => Promise<void>;
+}
+
+export interface Curriculum {
+    id: number;
+    title: string;
+    description: string;
+}

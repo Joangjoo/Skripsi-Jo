@@ -1,6 +1,14 @@
 import { ArrowRight, Star, Bookmark } from "lucide-react";
+import { useCourseStore } from "../../../store/UseCourseStore";
+import { useEffect } from "react";
 
 const HeroSection = () => {
+    const { ListCourses, fetchAllCourses } =
+        useCourseStore();
+
+    useEffect(() => {
+        fetchAllCourses();
+    }, []);
     return (
         <section className="max-w-[1280px] mx-auto px-8 py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
@@ -44,12 +52,12 @@ const HeroSection = () => {
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
                             <div className="flex justify-between items-start mb-4">
                                 <span className="bg-[#E0F2F1] text-[#00BFA5] text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">
-                                    Lanjutan
+                                    {ListCourses[0]?.level_name}
                                 </span>
                                 <Bookmark size={20} className="text-gray-300 fill-gray-300" />
                             </div>
                             <h3 className="text-xl font-bold text-[#30364F] mb-4">
-                                Pendalaman Performa React
+                                {ListCourses[0]?.title}
                             </h3>
                             <div className="flex items-center gap-2 text-sm text-gray-500">
                                 <Star size={16} className="text-yellow-400 fill-yellow-400" />
@@ -62,12 +70,12 @@ const HeroSection = () => {
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 translate-x-8 opacity-90">
                             <div className="flex justify-between items-start mb-4">
                                 <span className="bg-gray-200 text-[#30364F] text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">
-                                    Menengah
+                                    {ListCourses[1]?.level_name}
                                 </span>
                                 <Bookmark size={20} className="text-gray-300 fill-gray-300" />
                             </div>
                             <h3 className="text-xl font-bold text-[#30364F]">
-                                Internal Vue 3.4
+                                {ListCourses[1]?.title}
                             </h3>
                         </div>
 
