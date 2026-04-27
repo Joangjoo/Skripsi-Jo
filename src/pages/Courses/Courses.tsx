@@ -2,9 +2,6 @@ import CourseHeader from "./components/CourseHeader";
 import FilterBar from "./components/FilterBar";
 import CourseGrid from "./components/CourseGrid";
 
-
-
-
 const Courses = () => {
 
     return (

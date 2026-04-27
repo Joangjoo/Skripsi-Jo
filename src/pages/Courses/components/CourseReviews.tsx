@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useReviewStore } from "../../../store/useReviewStore";
 import { Star, Edit, Trash2 } from "lucide-react";
-import type { Review } from "../../../types/review"; // "riview" typo based on user file
+import type { Review } from "../../../types/review"; 
 
 interface CourseReviewsProps {
     courseId: number;

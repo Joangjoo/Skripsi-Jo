@@ -61,7 +61,7 @@ const FilterBar = () => {
                                         setSelectedCategory(category)
                                         setIsOpen(false)
                                     }}
-                                    className={`w-full px-4 py-2 text-left hover:bg-gray-100 transition-colorstext-gray-700 ${selectedCategory === category ? "bg-gray-100 font-medium" : ""
+                                    className={`w-full px-4 py-2 text-left hover:bg-gray-100 transition-colors text-gray-700 ${selectedCategory === category ? "bg-gray-100 font-medium" : ""
                                         }`}
                                 >
                                     {category}
