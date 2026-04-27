@@ -88,3 +88,34 @@ func GetCourseDetail(c *gin.Context) {
 
     c.JSON(http.StatusOK, course)
 }
+
+func getCurriculum(c *gin.Context) {
+    rows, err := DB.Query(`
+        SELECT id, title, description, created_at
+        FROM curriculums
+    `)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+    defer rows.Close()
+
+    var curriculums []Curriculum = []Curriculum{}
+
+    for rows.Next() {
+        var curriculum Curriculum
+        err := rows.Scan(
+        &curriculum.ID,
+        &curriculum.Title,
+        &curriculum.Description,
+        &curriculum.CreatedAt,
+    )
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+    curriculums = append(curriculums, curriculum)
+}
+
+    c.JSON(http.StatusOK, curriculums)
+}

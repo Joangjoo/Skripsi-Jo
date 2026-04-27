@@ -19,3 +19,32 @@ type Course struct {
 	Subtitle 	string	`json:"subtitle"`
 	Overview 	string	`json:"overview"`
 }
+
+
+type Curriculum struct {
+	ID          int     `json:"id"`
+	Title       string  `json:"title"`
+	Description string  `json:"description"`
+	CreatedAt   string  `json:"created_at"`
+}
+
+type Review struct {
+	ID        int     `json:"id"`
+	CourseID  int     `json:"course_id"`
+	Reviewer  string  `json:"reviewer"`
+	Rating    float64 `json:"rating"`
+	Comment   string  `json:"comment"`
+	CreatedAt string  `json:"created_at"`
+}
+
+type CreateReviewInput struct {
+	Reviewer string  `json:"reviewer" binding:"required"`
+	Rating   float64 `json:"rating"   binding:"required,min=1,max=5"`
+	Comment  string  `json:"comment"  binding:"required"`
+}
+
+type UpdateReviewInput struct {
+	Reviewer string  `json:"reviewer" binding:"required"`
+	Rating   float64 `json:"rating"   binding:"required,min=1,max=5"`
+	Comment  string  `json:"comment"  binding:"required"`
+}

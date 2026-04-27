@@ -10,19 +10,26 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-        log.Println("Warning: .env file not found")
-    }
+		log.Println("Warning: .env file not found")
+	}
 
-    if err := ConnectDB(); err != nil {
-        log.Fatal(err)
-    }
+	if err := ConnectDB(); err != nil {
+		log.Fatal(err)
+	}
 
-    r := gin.Default()
-    r.Use(cors.Default())
+	r := gin.Default()
+	r.Use(cors.Default())
 
-    r.GET("/api/courses", GetCourses)
-    r.GET("/api/courses/:id", GetCourseDetail)
+	r.GET("/api/courses", GetCourses)
+	r.GET("/api/courses/:id", GetCourseDetail)
+	r.GET("/api/curriculum", getCurriculum)
 
-    log.Println("🚀 Server running on :8080")
-    r.Run(":8080") 
+	// Review CRUD
+	r.GET("/api/courses/:id/reviews", GetReviews)
+	r.POST("/api/courses/:id/reviews", CreateReview)
+	r.PUT("/api/reviews/:id", UpdateReview)
+	r.DELETE("/api/reviews/:id", DeleteReview)
+
+	log.Println("🚀 Server running on :8080")
+	r.Run(":8080")
 }
